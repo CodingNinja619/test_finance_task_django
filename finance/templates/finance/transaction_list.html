@@ -89,11 +89,11 @@
         <div class="row g-3 mb-3">
             <div class="col-md-6">
                 <label for="date_from" class="form-label">Начальная дата</label>
-                <input name="date_from" id="date_from" type="date" class="form-control" value="{{ filters.date_from }}">
+                {{form.date_from}}
             </div>
             <div class="col-md-6">
                 <label for="date_to" class="form-label">Конечная дата</label>
-                <input name="date_to" id="date_to" type="date" class="form-control" value="{{ filters.date_to }}">
+                {{form.date_to}}
             </div>
         </div>
 
@@ -101,13 +101,7 @@
             <!-- Status -->
             <div class="col-md-3">
                 <label class="form-label">Статус</label>
-                <select name="status" class="form-select">
-                    <option value="">Все</option>
-                    {% for status in statuses %}
-                    <option value="{{ status.id }}" {% if status.id|stringformat:"s" == filters.status|stringformat:"s" %}
-                        selected {% endif %}>{{ status.name }}</option>
-                    {% endfor %}
-                </select>
+                {{form.status}}
             </div>
 
 
@@ -115,60 +109,39 @@
             <!-- Type -->
             <div class="col-md-3">
                 <label class="form-label">Тип</label>
-                <select name="type" id="type-select" class="form-select">
-                    <option value="">Все</option>
-                    {% for type in types %}
-                    <option value="{{ type.id }}" {% if type.id|stringformat:"s" == filters.type %} selected {% endif %}>
-                        {{ type.name }}</option>
-                    {% endfor %}
-                </select>
+                {{form.type}}
             </div>
 
             <!-- Category -->
             <div class="col-md-3">
                 <label class="form-label">Категория</label>
-                <select name="category" id="category-select" class="form-select" disabled>
-                    <option value="">Все</option>
-                    {% for category in categories %}
-                    <option value="{{ category.id }}" {% if category.id|stringformat:"s" == filters.category %} selected
-                        {% endif %}>{{ category.name }}</option>
-                    {% endfor %}
-                </select>
+                    {{form.category}}
             </div>
         </div>
         <div class="row g-3 mb-2">
             <!-- Subcategory -->
             <div class="col-md-3">
                 <label class="form-label">Подкатегория</label>
-                <select name="subcategory" id="subcategory-select" class="form-select" disabled>
-                    <option value="">Все</option>
-                    {% for subcategory in subcategories %}
-                    <option value="{{ subcategory.id }}" {% if subcategory.id|stringformat:"s" == filters.subcategory %}
-                        selected {% endif %}>{{ subcategory.name }}</option>
-                    {% endfor %}
-                </select>
+                {{form.subcategory}}
             </div>
 
             <!-- Min amount -->
             <div class="col-md-3">
                 <label class="form-label">Мин. сумма</label>
-                <input type="number" name="min_amount" class="form-control" placeholder="0"
-                    value="{{ filters.min_amount }}">
+                {{form.min_amount}}
             </div>
 
             <!-- Max amount -->
             <div class="col-md-3">
                 <label class="form-label">Макс. сумма</label>
-                <input type="number" name="max_amount" class="form-control" placeholder="10000"
-                    value="{{ filters.max_amount }}">
+                {{form.max_amount}}
             </div>
         </div>
         <div class="row g-3 mb-2">
             <!-- Comment -->
             <div class="col-md-9 ">
                 <label class="form-label">Комментарий</label>
-                <input type="text" name="comment" class="form-control" placeholder="Поиск по комментариям"
-                    value="{{ filters.comment }}">
+                {{form.comment}}
             </div>
 
         </div>
