@@ -1,7 +1,9 @@
 from django.contrib import admin
 from .models import *
+from .forms import TransactionAdminForm
 
 class TransactionAdmin(admin.ModelAdmin):
+    form = TransactionAdminForm
     list_display = (
         "created_at",
         "status",
@@ -18,6 +20,9 @@ class TransactionAdmin(admin.ModelAdmin):
         "subcategory",
         "created_at",
     )
+
+    class Media:
+        js = ("admin/js/transaction_admin.js",)
 
 admin.site.register(Status)
 admin.site.register(Type)
