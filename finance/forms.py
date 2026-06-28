@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import Category, Status, SubCategory, Type
+from .models import Category, Status, SubCategory, Type, Transaction
 
 
 class TransactionFilterForm(forms.Form):
@@ -79,4 +79,23 @@ class TransactionFilterForm(forms.Form):
         }),
     )
 
+class TransactionAdminForm(forms.ModelForm):
 
+    class Meta:
+        model = Transaction
+        fields = "__all__"
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        if self.instance and self.instance.pk:
+            if self.instance.type:
+                self.fields["category"].queryset = Category.objects.filter(type_id=self.instance.type.id)
+            
+            if self.instance.category:
+                self.fields["subcategory"].queryset = SubCategory.objects.filter(category_id=self.instance.category.id)
+        else:
+            # при создании — ничего не показываем (или всё)
+            self.fields["category"].queryset = Category.objects.none()
+            self.fields["subcategory"].queryset = SubCategory.objects.none()
+        # maybe else next
