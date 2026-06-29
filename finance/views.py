@@ -1,12 +1,12 @@
 from decimal import Decimal, InvalidOperation
 
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, redirect, render
 
 from .models import Category, Status, SubCategory, Transaction, Type
 
 from django.http import JsonResponse
 
-from .forms import TransactionFilterForm
+from .forms import TransactionFilterForm, TransactionForm
 
 # view главной страницы
 def transaction_list(request):
@@ -73,3 +73,28 @@ def get_subcategories(request):
     data = list(subcategories.values("id", "name"))
 
     return JsonResponse(data, safe=False)
+
+def transaction_create(request):
+    if request.method == "POST":
+        form = TransactionForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect("finance:transaction_list")
+    else:
+        form = TransactionForm()
+
+    return render(request, "finance/transaction.html", {"form": form})
+
+
+def transaction_update(request, pk):
+    transaction = get_object_or_404(Transaction, pk=pk)
+
+    if request.method == "POST":
+        form = TransactionForm(request.POST, instance=transaction)
+        if form.is_valid():
+            form.save()
+            return redirect("finance:transaction_list")
+    else:
+        form = TransactionForm(instance=transaction)
+
+    return render(request, "finance/transaction.html", {"form": form})

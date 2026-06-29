@@ -115,7 +115,7 @@
             <!-- Category -->
             <div class="col-md-3">
                 <label class="form-label">Категория</label>
-                    {{form.category}}
+                {{form.category}}
             </div>
         </div>
         <div class="row g-3 mb-2">
@@ -154,9 +154,17 @@
 
     </form>
 
+    <!-- <a style="margin: 0 auto;" href="{% url 'finance:transaction_create' %}">Добавить запись</a> -->
+    <div class="text-center my-3">
+        <a href="{% url 'finance:transaction_create' %}" class="btn btn-success">
+            Добавить запись
+        </a>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
+        // document.addEventListener("DOMContentLoaded", function () { })
         document.addEventListener("DOMContentLoaded", function () {
 
             const typeSelect = document.querySelector("#type-select");
@@ -194,7 +202,7 @@
                             categorySelect.appendChild(option);
                         });
 
-                        
+
                         if (selectedCategoryId) {
                             loadSubcategories(selectedCategoryId, selectedSubcategory);
                         }
@@ -249,6 +257,25 @@
             }
 
         });
+        function loadOptions(url, selectElement, placeholder = "-----", selectedId = null) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+
+                    data.forEach(item => {
+                        const option = document.createElement("option");
+                        option.value = item.id;
+                        option.textContent = item.name;
+
+                        if (selectedId && String(item.id) === String(selectedId)) {
+                            option.selected = true;
+                        }
+
+                        selectElement.appendChild(option);
+                    });
+                });
+        }
 
 
     </script>
