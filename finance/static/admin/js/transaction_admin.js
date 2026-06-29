@@ -90,16 +90,12 @@ document.addEventListener("DOMContentLoaded", function () {
   //   subcategorySelect.disabled = true;
   // }
   const typeSelect = document.querySelector("#id_type");
-
-  // if (typeSelect.textContent != "") 
-  //   return;
-
   const categorySelect = document.querySelector("#id_category");
   const subcategorySelect = document.querySelector("#id_subcategory");
 
   const selectedType = typeSelect.value;
   const selectedCategory = categorySelect.value;
-  const selectedSubcategory = subcategorySelect.value;
+  // const selectedSubcategory = subcategorySelect.value;
 
   categorySelect.disabled = true;
   subcategorySelect.disabled = true;
@@ -108,27 +104,31 @@ document.addEventListener("DOMContentLoaded", function () {
     categorySelect.disabled = false;
 
     loadOptions(
-        `/ajax/categories?type_id=${selectedType}`,
-        categorySelect,
-        "Выберите категорию",
-        selectedCategory
+      `/ajax/categories?type_id=${selectedType}`,
+      categorySelect,
+      "Выберите категорию",
+      selectedCategory
     );
+  } else {
+    categorySelect.innerHTML = "<option>Сначала выберите тип</option>";
   }
   
+
   if (selectedCategory) {
     subcategorySelect.disabled = false;
 
     loadOptions(
-        `/ajax/subcategories?category_id=${selectedCategory}`,
-        subcategorySelect,
-        "Выберите категорию",
-        selectedSubcategory
+      `/ajax/subcategories?category_id=${selectedCategory}`,
+      subcategorySelect,
+      "Выберите категорию",
+      selectedSubcategory
     );
-
+  } else {
+    subcategorySelect.innerHTML = "<option>Сначала выберите категорию</option>";
   }
 
-  categorySelect.innerHTML = "<option>Сначала выберите тип</option>";
-  subcategorySelect.innerHTML = "<option>Сначала выберите категорию</option>";
+  // categorySelect.innerHTML = "<option>Сначала выберите тип</option>";
+  // subcategorySelect.innerHTML = "<option>Сначала выберите категорию</option>";
 
   typeSelect.addEventListener("change", function () {
     let typeId = this.value;
@@ -157,23 +157,23 @@ document.addEventListener("DOMContentLoaded", function () {
 })
 
 function loadOptions(url, selectElement, placeholder = "-----", selectedId = null) {
-    fetch(url)
-        .then(response => response.json())
-        .then(data => {
-            selectElement.innerHTML = `<option value="">${placeholder}</option>`;
+  fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      selectElement.innerHTML = `<option value="">${placeholder}</option>`;
 
-            data.forEach(item => {
-                const option = document.createElement("option");
-                option.value = item.id;
-                option.textContent = item.name;
+      data.forEach(item => {
+        const option = document.createElement("option");
+        option.value = item.id;
+        option.textContent = item.name;
 
-                if (selectedId && String(item.id) === String(selectedId)) {
-                    option.selected = true;
-                }
+        if (selectedId && String(item.id) === String(selectedId)) {
+          option.selected = true;
+        }
 
-                selectElement.appendChild(option);
-            });
-        });
+        selectElement.appendChild(option);
+      });
+    });
 }
 
 // function loadOptions(url, selectElement, placeholder="-----") {
