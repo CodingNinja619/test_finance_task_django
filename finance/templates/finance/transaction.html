@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        {% if form.instance.pk %}Редактирование транзакции{% else %}Новая транзакция{% endif %}
+    </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        form {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container py-4">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="h3 mb-0">
+                {% if form.instance.pk %}
+                    Редактирование транзакции
+                {% else %}
+                    Новая транзакция
+                {% endif %}
+            </h1>
+            <a href="{% url 'finance:transaction_list' %}" class="btn btn-outline-secondary btn-sm">
+                ← К списку
+            </a>
+        </div>
+
+        {% if form.instance.pk %}
+        <p class="text-muted small mb-4">
+            Дата создания: {{ form.instance.created_at|date:"d.m.Y" }}
+        </p>
+        {% endif %}
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger">
+            {% for error in form.non_field_errors %}
+            <div>{{ error }}</div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" class="p-4 border rounded bg-light">
+            {% csrf_token %}
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.status.id_for_label }}" class="form-label">Статус</label>
+                    {{ form.status }}
+                    {% if form.status.errors %}
+                    <div class="text-danger small mt-1">{{ form.status.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <label for="{{ form.type.id_for_label }}" class="form-label">Тип</label>
+                    {{ form.type }}
+                    {% if form.type.errors %}
+                    <div class="text-danger small mt-1">{{ form.type.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.category.id_for_label }}" class="form-label">Категория</label>
+                    {{ form.category }}
+                    {% if form.category.errors %}
+                    <div class="text-danger small mt-1">{{ form.category.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="col-md-6">
+                    <label for="{{ form.subcategory.id_for_label }}" class="form-label">Подкатегория</label>
+                    {{ form.subcategory }}
+                    {% if form.subcategory.errors %}
+                    <div class="text-danger small mt-1">{{ form.subcategory.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                    <label for="{{ form.amount.id_for_label }}" class="form-label">Сумма</label>
+                    {{ form.amount }}
+                    {% if form.amount.errors %}
+                    <div class="text-danger small mt-1">{{ form.amount.errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="mb-4">
+                <label for="{{ form.comment.id_for_label }}" class="form-label">Комментарий</label>
+                {{ form.comment }}
+                {% if form.comment.errors %}
+                <div class="text-danger small mt-1">{{ form.comment.errors }}</div>
+                {% endif %}
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    {% if form.instance.pk %}Сохранить{% else %}Создать{% endif %}
+                </button>
+                <a href="{% url 'finance:transaction_list' %}" class="btn btn-outline-secondary">
+                    Отмена
+                </a>
+            </div>
+        </form>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const typeSelect = document.querySelector("#type-select");
+            const categorySelect = document.querySelector("#category-select");
+            const subcategorySelect = document.querySelector("#subcategory-select");
+
+            if (!typeSelect || !categorySelect || !subcategorySelect) {
+                return;
+            }
+
+            const selectedType = typeSelect.value;
+            const selectedCategory = categorySelect.value;
+            const selectedSubcategory = subcategorySelect.value;
+
+            function loadCategories(typeId, selectedCategoryId = null) {
+                categorySelect.innerHTML = "";
+
+                if (!typeId) {
+                    categorySelect.disabled = true;
+                    subcategorySelect.innerHTML = "";
+                    subcategorySelect.disabled = true;
+                    return;
+                }
+
+                categorySelect.disabled = false;
+
+                fetch(`/ajax/categories/?type_id=${typeId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        data.forEach(cat => {
+                            const option = document.createElement("option");
+                            option.value = cat.id;
+                            option.textContent = cat.name;
+
+                            if (selectedCategoryId && String(cat.id) === String(selectedCategoryId)) {
+                                option.selected = true;
+                            }
+
+                            categorySelect.appendChild(option);
+                        });
+
+                        if (selectedCategoryId) {
+                            loadSubcategories(selectedCategoryId, selectedSubcategory);
+                        } else {
+                            subcategorySelect.innerHTML = "";
+                            subcategorySelect.disabled = true;
+                        }
+                    });
+            }
+
+            function loadSubcategories(categoryId, selectedSubId = null) {
+                subcategorySelect.innerHTML = "";
+
+                if (!categoryId) {
+                    subcategorySelect.disabled = true;
+                    return;
+                }
+
+                subcategorySelect.disabled = false;
+
+                fetch(`/ajax/subcategories/?category_id=${categoryId}`)
+                    .then(res => res.json())
+                    .then(data => {
+                        data.forEach(sub => {
+                            const option = document.createElement("option");
+                            option.value = sub.id;
+                            option.textContent = sub.name;
+
+                            if (selectedSubId && String(sub.id) === String(selectedSubId)) {
+                                option.selected = true;
+                            }
+
+                            subcategorySelect.appendChild(option);
+                        });
+                    });
+            }
+
+            typeSelect.addEventListener("change", function () {
+                loadCategories(this.value);
+            });
+
+            categorySelect.addEventListener("change", function () {
+                loadSubcategories(this.value);
+            });
+
+            if (selectedType) {
+                loadCategories(selectedType, selectedCategory);
+            } else {
+                categorySelect.disabled = true;
+                subcategorySelect.disabled = true;
+            }
+
+            const form = document.querySelector("form[method='post']");
+            form.addEventListener("submit", function () {
+                categorySelect.disabled = false;
+                subcategorySelect.disabled = false;
+            });
+        });
+    </script>
+</body>
+
+</html>
