@@ -116,19 +116,56 @@ class TransactionForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        # по умолчанию ВСЕ допустимы
+        self.fields["category"].queryset = Category.objects.all()
+        self.fields["subcategory"].queryset = SubCategory.objects.all()
 
+        # Редактирование (GET с instance)
         if self.instance and self.instance.pk:
+
             if self.instance.type:
-                self.fields["category"].queryset = Category.objects.filter(type=self.instance.type)
+                self.fields["category"].queryset = Category.objects.filter(
+                    type=self.instance.type
+                )
+
             if self.instance.category:
                 self.fields["subcategory"].queryset = SubCategory.objects.filter(
                     category=self.instance.category
                 )
-        else:
-            self.fields["category"].queryset = Category.objects.none()
-            self.fields["subcategory"].queryset = SubCategory.objects.none()
+
+        # Создание (POST)
+        if self.is_bound:
+            type_id = self.data.get("type")
+            category_id = self.data.get("category")
+
+            if type_id:
+                self.fields["category"].queryset = Category.objects.filter(
+                    type_id=type_id
+                )
+
+            if category_id:
+                self.fields["subcategory"].queryset = SubCategory.objects.filter(
+                    category_id=category_id
+                )
+
+        
+        if not self.instance.pk:
             self.fields["category"].widget.attrs["disabled"] = True
             self.fields["subcategory"].widget.attrs["disabled"] = True
+        # super().__init__(*args, **kwargs)
+
+        # if self.instance and self.instance.pk:
+        #     if self.instance.type:
+        #         self.fields["category"].queryset = Category.objects.filter(type=self.instance.type)
+        #     if self.instance.category:
+        #         self.fields["subcategory"].queryset = SubCategory.objects.filter(
+        #             category=self.instance.category
+        #         )
+        # else:
+        #     self.fields["category"].queryset = Category.objects.none()
+        #     self.fields["subcategory"].queryset = SubCategory.objects.none()
+        #     self.fields["category"].widget.attrs["disabled"] = True
+        #     self.fields["subcategory"].widget.attrs["disabled"] = True
 
     # def __init__(self, *args, **kwargs):
     #     super().__init__(*args, **kwargs)

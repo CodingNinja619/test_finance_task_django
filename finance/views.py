@@ -86,7 +86,7 @@ def transaction_create(request):
     return render(request, "finance/transaction.html", {"form": form})
 
 
-def transaction_update(request, pk):
+def transaction_edit(request, pk):
     transaction = get_object_or_404(Transaction, pk=pk)
 
     if request.method == "POST":
@@ -98,3 +98,10 @@ def transaction_update(request, pk):
         form = TransactionForm(instance=transaction)
 
     return render(request, "finance/transaction.html", {"form": form})
+
+def transaction_delete(request, pk):
+    transaction = get_object_or_404(Transaction, pk=pk)
+    if request.method == "POST":
+        transaction.delete()
+    
+    return redirect("finance:transaction_list")
