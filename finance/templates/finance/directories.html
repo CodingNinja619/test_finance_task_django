@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container mt-4">
+
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-bs-toggle="tab" href="#types">
+                    Типы
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#statuses">
+                    Статусы
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#categories">
+                    Категории
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" data-bs-toggle="tab" href="#subcategories">
+                    Подкатегории
+                </a>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-3">
+
+            <!-- ====================== TYPES ====================== -->
+
+            <div class="tab-pane fade show active" id="types">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Типы</h5>
+
+                    <button class="btn btn-success btn-sm open-directory-modal" data-title="Добавить тип"
+                        data-form="type-form">
+                        + Добавить тип
+                    </button>
+                </div>
+
+                <div style="max-width: 500px;">
+                    <ul class="list-group">
+                        {% for type in types %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                            <span>{{ type.name }}</span>
+
+                            <div>
+                                <button class="btn btn-outline-primary btn-sm me-2">
+                                    Изменить
+                                </button>
+
+                                <button class="btn btn-outline-danger btn-sm">
+                                    Удалить
+                                </button>
+                            </div>
+
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">
+                            Типов нет
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- ====================== STATUSES ====================== -->
+
+            <div class="tab-pane fade" id="statuses">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Статусы</h5>
+
+                    <button class="btn btn-success btn-sm open-directory-modal" data-title="Добавить статус"
+                        data-form="status-form">
+                        + Добавить статус
+                    </button>
+                </div>
+
+                <div style="max-width: 500px;">
+                    <ul class="list-group">
+                        {% for status in statuses %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                            <span>{{ status.name }}</span>
+
+                            <div>
+                                <button class="btn btn-outline-primary btn-sm me-2">
+                                    Изменить
+                                </button>
+
+                                <button class="btn btn-outline-danger btn-sm">
+                                    Удалить
+                                </button>
+                            </div>
+
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">
+                            Статусов нет
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- ====================== CATEGORIES ====================== -->
+
+            <div class="tab-pane fade" id="categories">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Категории</h5>
+
+                    <button class="btn btn-success btn-sm open-directory-modal" data-title="Добавить категорию"
+                        data-form="category-form">
+                        + Добавить категорию
+                    </button>
+                </div>
+
+                <div style="max-width: 600px;">
+                    <ul class="list-group">
+                        Тип
+                        <select name="types" id="types-select">
+                            <option value="">------</option>
+                            {% for type in types %}
+                                <option value="{{type.id}}">{{type.name}}</option>
+                            {% endfor %}
+                        </select>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- ====================== SUBCATEGORIES ====================== -->
+
+            <div class="tab-pane fade" id="subcategories">
+
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="mb-0">Подкатегории</h5>
+
+                    <button class="btn btn-success btn-sm open-directory-modal" data-title="Добавить подкатегорию"
+                        data-form="subcategory-form">
+                        + Добавить подкатегорию
+                    </button>
+                </div>
+
+                <div style="max-width: 650px;">
+                    <ul class="list-group">
+                        {% for subcategory in subcategories %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+
+                            <div>
+                                <strong>{{ subcategory.name }}</strong><br>
+                                <small class="text-muted">
+                                    {{ subcategory.category.name }}
+                                </small>
+                            </div>
+
+                            <div>
+                                <button class="btn btn-outline-primary btn-sm me-2">
+                                    Изменить
+                                </button>
+
+                                <button class="btn btn-outline-danger btn-sm">
+                                    Удалить
+                                </button>
+                            </div>
+
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item text-muted">
+                            Подкатегорий нет
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    <!-- <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link active" data-bs-toggle="tab" href="#types">Типы</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#categories">Категории</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#subcategories">Подкатегории</a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" data-bs-toggle="tab" href="#statuses">Статусы</a>
+        </li>
+    </ul>
+
+    <div class="tab-content mt-3">
+        <div class="tab-pane fade show active" id="types">
+            types
+        </div>
+
+        <div class="tab-pane fade" id="categories">
+            categories
+        </div>
+
+        <div class="tab-pane fade" id="subcategories">
+            categories
+        </div>
+
+        <div class="tab-pane fade" id="statuses">
+            statuses
+        </div>
+    </div> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const tabs = document.querySelectorAll('.tab');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                // убрать active у всех
+                tabs.forEach(t => t.classList.remove('active'));
+
+                // добавить active текущему
+                tab.classList.add('active');
+            });
+        });
+    </script>
+</body>
+
+</html>

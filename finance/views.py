@@ -105,3 +105,9 @@ def transaction_delete(request, pk):
         transaction.delete()
     
     return redirect("finance:transaction_list")
+
+def directories(request):
+    statuses = Status.objects.all()
+    types = Type.objects.all()
+
+    return render(request, "finance/directories.html", {"statuses": statuses, "types": types})
