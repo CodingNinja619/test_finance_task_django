@@ -1,4 +1,32 @@
 // import { loadOptions } from "./utils";
+function getCookie(name) {
+  let cookieValue = null;
+
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+
+    for (let cookie of cookies) {
+      cookie = cookie.trim();
+
+      if (cookie.startsWith(name + '=')) {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+
+  return cookieValue;
+}
+
+const csrftoken = getCookie("csrftoken");
+
+document.querySelectorAll('.nav-link[data-bs-toggle="tab"]').forEach(tab => {
+  tab.addEventListener('shown.bs.tab', function (event) {
+    const activeTab = event.target.getAttribute('href');
+    localStorage.setItem('activeTab', activeTab);
+  });
+});
+
 const tabs = document.querySelectorAll('.tab');
 
 tabs.forEach(tab => {
@@ -10,8 +38,19 @@ tabs.forEach(tab => {
     tab.classList.add('active');
   });
 });
-console.log("TOP layer");
+
 document.addEventListener("DOMContentLoaded", () => {
+  const activeTab = localStorage.getItem('activeTab');
+
+  if (activeTab) {
+    const tabTrigger = document.querySelector(`a[href="${activeTab}"]`);
+
+    if (tabTrigger) {
+      const tab = new bootstrap.Tab(tabTrigger);
+      tab.show();
+    }
+  }
+
   const forms = document.querySelectorAll(
     "#type-form, #status-form, #category-form, #subcategory-form"
   );
@@ -26,6 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document
         .getElementById(button.dataset.target)
         .classList.remove("d-none");
+      openDirectoryFormCreate(button.dataset.target, button.dataset.entity);
     });
   });
 
@@ -37,13 +77,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 });
 
-console.log(document.querySelectorAll(".edit-type"));
-console.log(document.querySelector("#type-form"));
-console.log(document.querySelector("#id_name"));
-
-
-// Почему-то вылетело из DomCOntentLoaded
-console.log("Inside DOMContentLoaded");
 
 const typeSelect = document.querySelector("#type-select");
 const categorySelect = document.querySelector("#category-select");
@@ -63,14 +96,6 @@ fetch("/ajax/categories/")
     })
   })
 
-console.log(categoriesList);
-
-// if (!typeSelect || !categorySelect) {
-//   return;
-// }
-console.log(typeSelect);
-
-
 typeSelect.addEventListener("change", function () {
   const typeId = this.value;
   console.log("CHANGE FIRED", this.value);
@@ -87,6 +112,8 @@ typeSelect.addEventListener("change", function () {
 categorySelect.addEventListener("change", function () {
   const categoryId = this.value;
 
+  console.log("category changed:", categoryId);
+
   if (!categoryId) {
     subcategoriesList.innerHTML = "";
     return;
@@ -98,7 +125,6 @@ categorySelect.addEventListener("change", function () {
 
 document.querySelectorAll(".edit-type").forEach(btn => {
   btn.addEventListener("click", () => {
-    console.log("Clicked");
     document.querySelector("#type-form").classList.remove("d-none");
 
     document.querySelector("#type-form #id_name").value = btn.dataset.name;
@@ -141,9 +167,14 @@ function loadCategories(typeId) {
                         Изменить
                     </button>
 
-                    <button class="btn btn-outline-danger btn-sm">
-                        Удалить
-                    </button>
+                    <form method="post"
+                        action="/directories/category/${category.id}/delete/"
+                        class="d-inline">
+                      <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">  
+                      <button type="submit" class="btn btn-outline-danger btn-sm">
+                          Удалить
+                      </button>
+                    </form>
                 </div>
             </li>
           `
@@ -213,7 +244,6 @@ function attachSubcategoryEditHandlers() {
 
       form.classList.remove("d-none");
 
-      // ВАЖНО: ограничиваемся формой (без конфликтов id)
       form.querySelector("#subcategory-form #id_name").value = btn.dataset.name;
       form.querySelector("#subcategory-form #id_category").value = btn.dataset.category;
 
@@ -224,6 +254,7 @@ function attachSubcategoryEditHandlers() {
 }
 
 function loadSubcategories(categoryId) {
+  console.log("loadSubcategories", categoryId);
   fetch(`/ajax/subcategories?category_id=${categoryId}`)
     .then(res => res.json())
     .then(subcategories => {
@@ -247,9 +278,16 @@ function loadSubcategories(categoryId) {
                   Изменить
               </button>
 
-              <button class="btn btn-outline-danger btn-sm">
-                  Удалить
-              </button>
+              <form method="post"
+                action="/directories/subcategory/${subcategory.id}/delete/"
+                      class="d-inline">
+
+                    <input type="hidden" name="csrfmiddlewaretoken" value="${csrftoken}">
+
+                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                        Удалить
+                    </button>
+              </form>
           </div>
       </li>
     `
@@ -257,6 +295,22 @@ function loadSubcategories(categoryId) {
       });
       attachSubcategoryEditHandlers();
     });
+}
 
-  
+function openDirectoryFormCreate(
+  formName,
+  entity
+  // mode = "create",
+  // id = null,
+  // data = {}
+) {
+
+  const formWrapper = document.querySelector(`#${formName}`);
+  const form = formWrapper.querySelector("form");
+
+  formWrapper.classList.remove("d-none");
+
+  form.reset();
+  form.action = `/directories/${entity}/create/`;
+
 }

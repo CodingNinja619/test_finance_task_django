@@ -48,7 +48,7 @@
                     <h5 class="mb-0">Типы</h5>
 
                     <button class="btn btn-success btn-sm open-directory-modal open-form-btn" data-title="Добавить тип"
-                        data-target="type-form">
+                        data-target="type-form" data-entity="type">
                         + Добавить тип
                     </button>
                 </div>
@@ -65,9 +65,14 @@
                                     Изменить
                                 </button>
 
-                                <button class="btn btn-outline-danger btn-sm">
-                                    Удалить
-                                </button>
+                                <form method="post"
+                                action="{% url 'finance:type_delete' type.id %}"
+                                class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        Удалить
+                                    </button>
+                                </form>
                             </div>
 
                         </li>
@@ -97,7 +102,7 @@
                     <h5 class="mb-0">Статусы</h5>
 
                     <button name="create-status" class="btn btn-success btn-sm open-directory-modal open-form-btn" data-title="Добавить статус"
-                        data-target="status-form">
+                        data-target="status-form" data-entity="status">
                         + Добавить статус
                     </button>
                 </div>
@@ -114,9 +119,14 @@
                                     Изменить
                                 </button>
 
-                                <button class="btn btn-outline-danger btn-sm">
-                                    Удалить
-                                </button>
+                                <form method="post"
+                                    action="{% url 'finance:status_delete' status.id %}"
+                                    class="d-inline">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-danger btn-sm">
+                                        Удалить
+                                    </button>
+                                </form>
                             </div>
 
                         </li>
@@ -147,7 +157,7 @@
                     <h5 class="mb-0">Категории</h5>
 
                     <button name="create-category" class="btn btn-success btn-sm open-directory-modal open-form-btn" data-title="Добавить категорию"
-                        data-target="category-form">
+                        data-target="category-form" data-entity="category">
                         + Добавить категорию
                     </button>
                 </div>
@@ -186,7 +196,7 @@
                     <h5 class="mb-0">Подкатегории</h5>
 
                     <button name="create-subcategory" class="btn btn-success btn-sm open-directory-modal open-form-btn" data-title="Добавить подкатегорию"
-                        data-target="subcategory-form">
+                        data-target="subcategory-form" data-entity="subcategory">
                         + Добавить подкатегорию
                     </button>
                 </div>

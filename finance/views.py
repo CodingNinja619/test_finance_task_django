@@ -62,7 +62,7 @@ def get_categories(request):
     else:
         categories = Category.objects.filter(type_id=type_id)
 
-    data = list(categories.values("id", "name"))
+    data = list(categories.values("id", "name", "type_id"))
 
     return JsonResponse(data, safe=False)
 
@@ -70,7 +70,7 @@ def get_subcategories(request):
     category_id = request.GET.get("category_id")
     subcategories = SubCategory.objects.filter(category_id=category_id)
 
-    data = list(subcategories.values("id", "name"))
+    data = list(subcategories.values("id", "name", "category_id"))
 
     return JsonResponse(data, safe=False)
 
@@ -115,31 +115,31 @@ def directories(request):
     category_form = CategoryForm()
     subcategory_form = SubCategoryForm()
 
-    if request.method == "POST":
+    # if request.method == "POST":
 
-        if "create_status" in request.POST:
-            status_form = StatusForm(request.POST)
-            if status_form.is_valid():
-                status_form.save()
-                return redirect("finance:directories")
+    #     if "create_status" in request.POST:
+    #         status_form = StatusForm(request.POST)
+    #         if status_form.is_valid():
+    #             status_form.save()
+    #             return redirect("finance:directories")
 
-        if "create_type" in request.POST:
-            type_form = TypeForm(request.POST)
-            if type_form.is_valid():
-                type_form.save()
-                return redirect("finance:directories")
+    #     if "create_type" in request.POST:
+    #         type_form = TypeForm(request.POST)
+    #         if type_form.is_valid():
+    #             type_form.save()
+    #             return redirect("finance:directories")
 
-        if "create_category" in request.POST:
-            category_form = CategoryForm(request.POST)
-            if category_form.is_valid():
-                category_form.save()
-                return redirect("finance:directories")
+    #     if "create_category" in request.POST:
+    #         category_form = CategoryForm(request.POST)
+    #         if category_form.is_valid():
+    #             category_form.save()
+    #             return redirect("finance:directories")
 
-        if "create_subcategory" in request.POST:
-            subcategory_form = SubCategoryForm(request.POST)
-            if subcategory_form.is_valid():
-                subcategory_form.save()
-                return redirect("finance:directories")
+    #     if "create_subcategory" in request.POST:
+    #         subcategory_form = SubCategoryForm(request.POST)
+    #         if subcategory_form.is_valid():
+    #             subcategory_form.save()
+    #             return redirect("finance:directories")
         
 
     return render(request, "finance/directories.html", {
@@ -150,3 +150,106 @@ def directories(request):
         "category_form": category_form,
         "subcategory_form": subcategory_form,
     })
+
+def type_create(request):
+    if request.method == "POST":
+        form = TypeForm(request.POST)
+        if form.is_valid():
+            form.save()
+    return redirect("finance:directories")
+
+def status_create(request):
+    if request.method == "POST":
+        form = StatusForm(request.POST)
+        if form.is_valid():
+            form.save()
+    return redirect("finance:directories")
+
+def category_create(request):
+    if request.method == "POST":
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+    return redirect("finance:directories")
+
+def subcategory_create(request):
+    if request.method == "POST":
+        form = SubCategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+    return redirect("finance:directories")
+
+def status_edit(request, pk):
+    status = get_object_or_404(Status, pk=pk)
+
+    if request.method == "POST":
+        form = StatusForm(request.POST, instance=status)
+        if form.is_valid():
+            form.save()
+
+    return redirect("finance:directories")
+
+def type_edit(request, pk):
+    type_obj = get_object_or_404(Type, pk=pk)
+
+    if request.method == "POST":
+        form = TypeForm(request.POST, instance=type_obj)
+        if form.is_valid():
+            form.save()
+
+    return redirect("finance:directories")
+
+def category_edit(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+
+    if request.method == "POST":
+        form = CategoryForm(request.POST, instance=category)
+        if form.is_valid():
+            form.save()
+
+    return redirect("finance:directories")
+
+def subcategory_edit(request, pk):
+    subcategory = get_object_or_404(SubCategory, pk=pk)
+
+    if request.method == "POST":
+        form = SubCategoryForm(request.POST, instance=subcategory)
+        if form.is_valid():
+            form.save()
+
+    return redirect("finance:directories")
+
+def type_delete(request, pk):
+    type_obj = get_object_or_404(Type, pk=pk)
+
+    if request.method == "POST":
+        type_obj.delete()
+
+    return redirect("finance:directories")
+
+
+def status_delete(request, pk):
+    status = get_object_or_404(Status, pk=pk)
+
+    if request.method == "POST":
+        status.delete()
+
+    return redirect("finance:directories")
+
+
+def category_delete(request, pk):
+    category = get_object_or_404(Category, pk=pk)
+
+    if request.method == "POST":
+        category.delete()
+
+    return redirect("finance:directories")
+
+
+def subcategory_delete(request, pk):
+    subcategory = get_object_or_404(SubCategory, pk=pk)
+
+    if request.method == "POST":
+        subcategory.delete()
+
+    return redirect("finance:directories")
