@@ -152,51 +152,6 @@ class TransactionForm(forms.ModelForm):
         if not self.instance.pk:
             self.fields["category"].widget.attrs["disabled"] = True
             self.fields["subcategory"].widget.attrs["disabled"] = True
-        # super().__init__(*args, **kwargs)
-
-        # if self.instance and self.instance.pk:
-        #     if self.instance.type:
-        #         self.fields["category"].queryset = Category.objects.filter(type=self.instance.type)
-        #     if self.instance.category:
-        #         self.fields["subcategory"].queryset = SubCategory.objects.filter(
-        #             category=self.instance.category
-        #         )
-        # else:
-        #     self.fields["category"].queryset = Category.objects.none()
-        #     self.fields["subcategory"].queryset = SubCategory.objects.none()
-        #     self.fields["category"].widget.attrs["disabled"] = True
-        #     self.fields["subcategory"].widget.attrs["disabled"] = True
-
-    # def __init__(self, *args, **kwargs):
-    #     super().__init__(*args, **kwargs)
-
-    #     self.fields["category"].queryset = Category.objects.none()
-    #     self.fields["subcategory"].queryset = SubCategory.objects.none()
-
-    #     if self.is_bound:
-    #         type_id = self.data.get("type")
-    #         if type_id:
-    #             self.fields["category"].queryset = Category.objects.filter(type_id=type_id)
-
-    #         category_id = self.data.get("category")
-    #         if category_id:
-    #             self.fields["subcategory"].queryset = SubCategory.objects.filter(
-    #                 category_id=category_id
-    #             )
-
-    #     elif self.instance.pk:
-    #         if self.instance.type:
-    #             self.fields["category"].queryset = Category.objects.filter(
-    #                 type=self.instance.type
-    #             )
-
-    #         if self.instance.category:
-    #             self.fields["subcategory"].queryset = SubCategory.objects.filter(
-    #                 category=self.instance.category
-    #             )
-    #     else:
-    #         self.fields["category"].widget.attrs["disabled"] = True
-    #         self.fields["subcategory"].widget.attrs["disabled"] = True
 
     def clean(self):
         cd = super().clean()
