@@ -6,7 +6,7 @@ from .models import Category, Status, SubCategory, Transaction, Type
 
 from django.http import JsonResponse
 
-from .forms import TransactionFilterForm, TransactionForm
+from .forms import TransactionFilterForm, TransactionForm, TypeForm, StatusForm, CategoryForm, SubCategoryForm
 
 # view главной страницы
 def transaction_list(request):
@@ -110,4 +110,43 @@ def directories(request):
     statuses = Status.objects.all()
     types = Type.objects.all()
 
-    return render(request, "finance/directories.html", {"statuses": statuses, "types": types})
+    status_form = StatusForm()
+    type_form = TypeForm()
+    category_form = CategoryForm()
+    subcategory_form = SubCategoryForm()
+
+    if request.method == "POST":
+
+        if "create_status" in request.POST:
+            status_form = StatusForm(request.POST)
+            if status_form.is_valid():
+                status_form.save()
+                return redirect("finance:directories")
+
+        if "create_type" in request.POST:
+            type_form = TypeForm(request.POST)
+            if type_form.is_valid():
+                type_form.save()
+                return redirect("finance:directories")
+
+        if "create_category" in request.POST:
+            category_form = CategoryForm(request.POST)
+            if category_form.is_valid():
+                category_form.save()
+                return redirect("finance:directories")
+
+        if "create_subcategory" in request.POST:
+            subcategory_form = SubCategoryForm(request.POST)
+            if subcategory_form.is_valid():
+                subcategory_form.save()
+                return redirect("finance:directories")
+        
+
+    return render(request, "finance/directories.html", {
+        "statuses": statuses,
+        "types": types,
+        "status_form": status_form,
+        "type_form": type_form,
+        "category_form": category_form,
+        "subcategory_form": subcategory_form,
+    })

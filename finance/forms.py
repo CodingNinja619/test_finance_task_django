@@ -212,3 +212,54 @@ class TransactionForm(forms.ModelForm):
             self.add_error("subcategory", "Подкатегория не относится к выбранной категории")
 
         return cd
+
+class TypeForm(forms.ModelForm):
+    class Meta:
+        model = Type
+        fields = ("name",)
+        widgets = {
+            "name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Название типа"
+            })
+        }
+
+class StatusForm(forms.ModelForm):
+    class Meta:
+        model = Status
+        fields = ("name",)
+        widgets = {
+            "name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Название статуса"
+            })
+        }
+
+class CategoryForm(forms.ModelForm):
+    class Meta:
+        model = Category
+        fields = ("name", "type")
+        widgets = {
+            "name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Название категории"
+            }),
+            "type": forms.Select(attrs={
+                "class": "form-select"
+            })
+        }
+
+
+class SubCategoryForm(forms.ModelForm):
+    class Meta:
+        model = SubCategory
+        fields = ("name", "category")
+        widgets = {
+            "name": forms.TextInput(attrs={
+                "class": "form-control",
+                "placeholder": "Название подкатегории"
+            }),
+            "category": forms.Select(attrs={
+                "class": "form-select"
+            })
+        }
