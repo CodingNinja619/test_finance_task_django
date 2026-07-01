@@ -55,6 +55,7 @@ def transaction_list(request):
     }
     return render(request, "finance/transaction_list.html", context)
 
+# Получение категорий (через AJAX)
 def get_categories(request):
     type_id = request.GET.get("type_id")
     if not type_id or type_id == "all":
@@ -66,6 +67,7 @@ def get_categories(request):
 
     return JsonResponse(data, safe=False)
 
+# Получение подкатегорий (через AJAX)
 def get_subcategories(request):
     category_id = request.GET.get("category_id")
     subcategories = SubCategory.objects.filter(category_id=category_id)
@@ -74,6 +76,7 @@ def get_subcategories(request):
 
     return JsonResponse(data, safe=False)
 
+# Создание, изменение, удаление транзакций
 def transaction_create(request):
     if request.method == "POST":
         form = TransactionForm(request.POST)
@@ -106,6 +109,7 @@ def transaction_delete(request, pk):
     
     return redirect("finance:transaction_list")
 
+# Страница справочников
 def directories(request):
     statuses = Status.objects.all()
     types = Type.objects.all()
@@ -114,33 +118,6 @@ def directories(request):
     type_form = TypeForm()
     category_form = CategoryForm()
     subcategory_form = SubCategoryForm()
-
-    # if request.method == "POST":
-
-    #     if "create_status" in request.POST:
-    #         status_form = StatusForm(request.POST)
-    #         if status_form.is_valid():
-    #             status_form.save()
-    #             return redirect("finance:directories")
-
-    #     if "create_type" in request.POST:
-    #         type_form = TypeForm(request.POST)
-    #         if type_form.is_valid():
-    #             type_form.save()
-    #             return redirect("finance:directories")
-
-    #     if "create_category" in request.POST:
-    #         category_form = CategoryForm(request.POST)
-    #         if category_form.is_valid():
-    #             category_form.save()
-    #             return redirect("finance:directories")
-
-    #     if "create_subcategory" in request.POST:
-    #         subcategory_form = SubCategoryForm(request.POST)
-    #         if subcategory_form.is_valid():
-    #             subcategory_form.save()
-    #             return redirect("finance:directories")
-        
 
     return render(request, "finance/directories.html", {
         "statuses": statuses,
@@ -151,6 +128,7 @@ def directories(request):
         "subcategory_form": subcategory_form,
     })
 
+# CRUD для справочников
 def type_create(request):
     if request.method == "POST":
         form = TypeForm(request.POST)

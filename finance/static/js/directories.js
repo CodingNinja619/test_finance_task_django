@@ -1,4 +1,4 @@
-// import { loadOptions } from "./utils";
+
 function getCookie(name) {
   let cookieValue = null;
 
@@ -204,37 +204,6 @@ function attachCategoryEditHandlers() {
   });
 }
 
-// function loadCategories(typeId) {
-//   fetch(`/ajax/categories?type_id=${typeId}`)
-//     .then(res => res.json())
-//     .then(categories => {
-
-//       categoriesList.innerHTML = "";
-
-//       categories.forEach(category => {
-//         categoriesList.insertAdjacentHTML(
-//           "beforeend",
-//           `
-//                         <li class="list-group-item d-flex justify-content-between align-items-center mt-3">
-//                             <span>${category.name}</span>
-
-//                             <div>
-//                                 <button class="btn btn-outline-primary btn-sm me-2">
-//                                     Изменить
-//                                 </button>
-
-//                                 <button class="btn btn-outline-danger btn-sm">
-//                                     Удалить
-//                                 </button>
-//                             </div>
-//                         </li>
-//                         `
-//         );
-//       });
-//     });
-// }
-
-
 
 function attachSubcategoryEditHandlers() {
   document.querySelectorAll(".edit-subcategory").forEach(btn => {
@@ -300,9 +269,6 @@ function loadSubcategories(categoryId) {
 function openDirectoryFormCreate(
   formName,
   entity
-  // mode = "create",
-  // id = null,
-  // data = {}
 ) {
 
   const formWrapper = document.querySelector(`#${formName}`);
