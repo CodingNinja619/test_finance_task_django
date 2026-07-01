@@ -58,8 +58,18 @@ python manage.py runserver
 /api/subcategories/
 
 ## Скриншоты интерфейса
+
+### Главная
 ![Главная](/main_page.png)
+
+### Фильтры на главной
 ![Фильтры на главной](/filtered_transactions.png)
+
+### Создание транзакции
 ![Создание транзацкии](/create_transaction.png)
+
+### Изменение транзакции
 ![Изменеие транзацкии](/edit_transaction.png)
+
+### Управление директориями
 ![Управление директориями](/directories_example.png)
