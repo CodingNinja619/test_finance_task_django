@@ -73,3 +73,12 @@ python manage.py runserver
 
 ### Управление справочниками
 ![Управление справочниками](/directories_example.png)
+
+### Пример REST API (все типы)
+![Типы REST](/types_api.png)
+
+### Пример REST API (один тип)
+![Тип REST](/type_api.png)
+
+### Пример REST API (все категории)
+![Тип REST](/type_api.png)
