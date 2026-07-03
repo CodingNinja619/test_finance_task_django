@@ -37,7 +37,7 @@ git clone https://github.com/CodingNinja619/test_finance_task_django.git
 
 cd test_finance_task_django
 
-python -m venv .venv
+python -m venv venv
 
 
 ### Linux / Mac
